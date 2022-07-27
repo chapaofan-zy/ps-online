@@ -3,6 +3,7 @@ import React, { lazy } from "react";
 import App from "../App";
 
 let routeArr = [
+  //hash
   {
     path: "/",
     component: App,
