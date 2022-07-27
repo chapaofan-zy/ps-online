@@ -1,0 +1,39 @@
+.bg {
+    position: absolute;
+    top: 80vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.label {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    text-align: center;
+    font-size: 30px;
+    border-radius: 5px;
+    transition: 0.3s linear;
+
+    .fh {
+        background-color: rgb(165, 165, 165);
+        width: 50px;
+        height: 50px;
+        user-select: none;
+    }
+    .fh:hover {
+        cursor: pointer;
+    }
+
+    span {
+        width: 100px;
+        height: 50px;
+        background-color: #fff;
+    }
+}
+.label:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}

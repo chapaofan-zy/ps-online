@@ -1,4 +1,16 @@
 .App {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+    .up {
+        position: absolute;
+        left: 50%;
+        top: 40vh;
+        transform: translateX(-50%);
+    }
+}
+.App {
     border: 1px solid #f2f2f2;
     background: -webkit-linear-gradient( top, transparent 15px, #f2f2f2 15px, #f2f2f2 16px, transparent 16px, transparent 31px, #f2f2f2 31px, #f2f2f2 32px, transparent 32px, transparent 47px, #f2f2f2 47px, #f2f2f2 48px, transparent 48px, transparent 63px, #e5e5e5 63px, #e5e5e5 63px), -webkit-linear-gradient( left, transparent 15px, #f2f2f2 15px, #f2f2f2 16px, transparent 16px, transparent 31px, #f2f2f2 31px, #f2f2f2 32px, transparent 32px, transparent 47px, #f2f2f2 47px, #f2f2f2 48px, transparent 48px, transparent 63px, #e5e5e5 63px, #e5e5e5 63px);
     background-size: 64px 64px;

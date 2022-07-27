@@ -1,0 +1,90 @@
+.bg {
+    position: fixed;
+    right: 80px;
+    top: 100px;
+    width: 300px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0,0, 0, 0.2);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: 0.3s;
+    z-index: 13;
+    &:hover {
+        box-shadow: 0 10px 20px rgba(0,0, 0, 0.3);
+    }
+}
+.bg > * {
+    margin: 10px 0;
+}
+
+.title {
+    position: relative;
+    align-self: start;
+    left: 10px;
+}
+
+.slider {
+    width: 100%;
+}
+
+.rect {
+    width: 100%;
+    position: relative;
+    align-self: start;
+    left: 10px;
+}
+
+.color {
+    position: relative;
+    align-self: start;
+    left: 10px;
+    .handler {
+        transform: translateY(10px);
+    }
+
+    .picker {
+        position: absolute;
+        z-index: 1;
+    }
+}
+
+.cbtn {
+    position: relative;
+    width: 50px;
+    height: 20px;
+    box-shadow: 0 0 5px rgba(0,0, 0, 0.4);
+    border-radius: 5%;
+
+    .cc {
+        width: 40px;
+        height: 14px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 5%;
+    }
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.showbox {
+    width: 200px;
+    height: 200px;
+    border-radius: 10%;
+    border: 1px solid rgba(0,0, 0, 0.4);
+    background: rgb(255, 255, 255);
+    position: relative;
+    box-shadow: inset 0 0 10px rgba(0,0, 0, 0.1);
+    .dot {
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+}

@@ -1,0 +1,31 @@
+.bg {
+    position: fixed;
+    left: 10%;
+    top: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10%;
+    padding: 5px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+
+    & > * {
+        margin: 5px;
+    }
+}
+
+
+.out {
+    background-color: rgb(241, 241, 241);
+    border-radius: 15%;
+    filter: brightness(0.9);
+
+    &:hover {
+        filter: brightness(1.05);
+    }
+}
+
+.on {
+    filter: brightness(1.05);
+}

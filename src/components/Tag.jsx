@@ -37,6 +37,6 @@ class Node {
     this.click(this);
   }
   click(e) {
-    console.log(e.src);
+    //console.log(e.src);
   }
 }
