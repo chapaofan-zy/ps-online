@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { ChromePicker } from 'react-color'
-import { Col, Slider, InputNumber, Radio } from 'antd'
+import { Col, Slider, InputNumber, Radio, Input, Button } from 'antd'
 import style from './css/painter.module.less'
 
 
-const utilList = ['选择', '画笔', '魔棒', '吸管', '矩形', '撤销','重做']
+const utilList = ['选择', '画笔', '魔棒', '吸管', '矩形', '滤镜', '撤销','重做']
 
 export default function Painter(props) {
 
@@ -61,6 +61,39 @@ export default function Painter(props) {
                 })
     }, [props.useArr])
 
+    const [myRGB, setmyRGB] = useState({
+        r: 'r',
+        g: 'g',
+        b: 'b'
+    })
+
+    function setMirror(e) {
+        let t = e.target.value
+        let obj
+        switch (t) {
+            case 'fanse':
+                obj = {
+                    r: '255 - r',
+                    g: '255 - g',
+                    b: '255 - b'
+                }
+                setmyRGB(obj)
+                break;
+            
+            case 'gray':
+                obj = {
+                    r: '(r + g + b) / 3',
+                    g: '(r + g + b) / 3',
+                    b: '(r + g + b) / 3'
+                }
+                setmyRGB(obj)
+                break;
+        
+            default:
+                break;
+        }
+    }
+
 
     return (
         <div className={style.bg}>
@@ -87,21 +120,21 @@ export default function Painter(props) {
             </div>}
             {/* rgb */}
             {props.useArr[2] && <div className={style.slider}>R
-                <Slider min={0} max={255} defaultValue={props.mColor.r} onChange={(v) => {
+                <Slider min={-255} max={255} defaultValue={props.mColor.r} onChange={(v) => {
                     let obj = {...props.mColor}
                     obj.r = v
                     props.setmColor(obj)
                 }}/>
             </div>}
             {props.useArr[2] && <div className={style.slider}>G
-                <Slider min={0} max={255} defaultValue={props.mColor.g} onChange={(v) => {
+                <Slider min={-255} max={255} defaultValue={props.mColor.g} onChange={(v) => {
                     let obj = {...props.mColor}
                     obj.g = v
                     props.setmColor(obj)
                 }}/>
             </div>}
             {props.useArr[2] && <div className={style.slider}>B
-                <Slider min={0} max={255} defaultValue={props.mColor.b} onChange={(v) => {
+                <Slider min={-255} max={255} defaultValue={props.mColor.b} onChange={(v) => {
                     let obj = {...props.mColor}
                     obj.b = v
                     props.setmColor(obj)
@@ -111,6 +144,46 @@ export default function Painter(props) {
             {/* 画笔 */}
             {(props.useArr[1] || props.useArr[4] || props.useArr[0]) && <div className={style.showbox}>
                 <div className={style.dot} style={dot}></div>
+            </div>}
+            {/* 滤镜 */}
+            {(props.useArr[5]) && <div className={style.mirror}>
+                <div>
+                    <Radio.Group onChange={setMirror} defaultValue={false}>
+                        <Radio.Button value={'fanse'}>反色</Radio.Button>    
+                        <Radio.Button value={'gray'}>灰色调</Radio.Button>    
+                    </Radio.Group>
+                </div>
+                <span className={style.zdy}>自定义：</span>
+                <div className={style.three}>
+                    <div className={style.zidingyi}>
+                        <span>R:</span>
+                        <Input value={myRGB.r} onChange={(e) => {
+                            let obj = {...myRGB}
+                            obj.r = e.target.value
+                            setmyRGB(obj)
+                        }}/>
+                    </div>
+                    <div className={style.zidingyi}>
+                        <span>G:</span>
+                        <Input value={myRGB.g} onChange={(e) => {
+                            let obj = {...myRGB}
+                            obj.g = e.target.value
+                            setmyRGB(obj)
+                        }}/>
+                    </div>
+                    <div className={style.zidingyi}>
+                        <span>B:</span>
+                        <Input value={myRGB.b} onChange={(e) => {
+                            let obj = {...myRGB}
+                            obj.b = e.target.value
+                            setmyRGB(obj)
+                        }}/>
+                    </div> 
+                </div>
+                <Button type="primary" onClick={() => {
+                    props.setmir(myRGB)
+                    props.setmirHandler(!props.mirHandler)
+                }}>确定</Button>
             </div>}
         </div>
     )

@@ -5,11 +5,12 @@ import Ctrl from './Ctrl'
 import Draggable from 'react-draggable'
 import Utils from './Utils'
 import { EventEmitter } from 'events'
-
+import { message } from 'antd'
 import Painter from './Painter'
+import { loadConfig } from 'browserslist'
 
 
-let useArr = [true, false, false, false, false, false,false, false]
+let useArr = [true, false, false, false, false, false, false, false, false]
 
 let selectArr = []
 
@@ -353,12 +354,86 @@ export default function Cav(props) {
         }
     }
 
-    /* useEffect(() => {
-        select()
-    }, [mouse]) */
+    const [mir, setmir] = useState({
+        r: 'r',
+        g: 'g',
+        b: 'b'
+    })
+    const [mirHandler, setmirHandler] = useState(false)
+
+    //滤镜
+    function mirror() {
+        cav.current.onmousedown = null
+        cav.current.onmousemove = null
+        cav.current.onmouseup = null
+        if (mir.r === 'r' && mir.g === 'g' && mir.b === 'b') {
+            return
+        }
+        let ctx = cav.current.getContext('2d')
+        let allImageData = ctx.getImageData(0, 0, width.slice(0, -2) * 1, height.slice(0, -2) * 1)
+        let rgb = {...mir}
+        rgb.r = rgb.r.replace(/r/g, 'allData[i]')
+        rgb.r = rgb.r.replace(/g/g, 'allData[i + 1]')
+        rgb.r = rgb.r.replace(/b/g, 'allData[i + 2]')
+        rgb.g = rgb.g.replace(/r/g, 'allData[i]')
+        rgb.g = rgb.g.replace(/g/g, 'allData[i + 1]')
+        rgb.g = rgb.g.replace(/b/g, 'allData[i + 2]')
+        rgb.b = rgb.b.replace(/r/g, 'allData[i]')
+        rgb.b = rgb.b.replace(/g/g, 'allData[i + 1]')
+        rgb.b = rgb.b.replace(/b/g, 'allData[i + 2]')
+        for (let i = 0; i < allImageData.data.length; i += 4) {
+            let allData = allImageData.data
+            try {
+                allData[i] = eval(rgb.r)
+                allData[i + 1] = eval(rgb.g)
+                allData[i + 2] = eval(rgb.b)
+            } catch {
+                message.error('输入不是数字')
+                return
+            }
+        }
+        ctx.putImageData(allImageData, 0, 0)
+        onreset(ctx)
+    }
+    
+
+    //下载
+    function downLoad() {
+        cav.current.onmousedown = null
+        cav.current.onmousemove = null
+        cav.current.onmouseup = null
+        cav.current.toBlob(function(blob) {
+            let a = document.createElement("a")
+            let body = document.getElementsByTagName("body")
+            document.body.appendChild(a)
+            a.download = "img" + ".jpg"
+            a.href = window.URL.createObjectURL(blob)
+            a.click()
+            body.removeChild("a")
+        })
+    }
+
+    useEffect(() => {
+        if (useArr[useArr.length - 1]) {
+            downLoad()
+        }
+    }, [useArr[useArr.length - 1]])
+
+    useEffect(() => {
+        if (useArr[5]) {
+            mirror()
+        }
+    }, [mir, mirHandler])
 
 
     //工具栏
+
+    useEffect(() => {
+        if (useArr[1]) {
+            draw()
+        }
+    }, [mouse, ctx, rectarr, mLimit, mColor, isFull])
+
     useEffect(() => {
         if (useArr[0]) {
             mouseUtil()
@@ -375,10 +450,16 @@ export default function Cav(props) {
         if (useArr[4]) {
             rect()
         }
-/*         if (useArr[5]) {
-            select()
-        } */
-    }, [mouse, ctx, rectarr, mLimit, mColor, isFull])
+    }, [useArr[0], useArr[2], useArr[3], useArr[4], ctx, rectarr, mLimit, mColor, isFull])
+
+
+    //设置cav的位置top
+    /* const bg = useRef(null)
+    useEffect(() => {
+        let height = cav.current.height
+
+        bg.current.style.top = height + 'px'
+    }, [cav]) */
 
     return (
         <div className=''>
@@ -391,18 +472,25 @@ export default function Cav(props) {
                     </div>
                 </Draggable>
             </div>
-            {/* <button onClick={() => useArr[5] = !useArr[5]}>选区</button> */}
-            {props.vis && <Painter 
-                setC={setcolor}
-                setlineWidth={setlineWidth} 
-                color={color} mLimit={mLimit} 
-                setmLimit={setmLimit}
-                mColor={mColor}
-                setmColor={setmColor}
-                useArr={useArr}
-                reset={reset}
-                resetS={resetS}
-                setisFull={setisFull}></Painter>}
+            <Draggable disabled={drag}>
+                <div>
+                    <Painter 
+                        setC={setcolor}
+                        setlineWidth={setlineWidth} 
+                        color={color} mLimit={mLimit} 
+                        setmLimit={setmLimit}
+                        mColor={mColor}
+                        setmColor={setmColor}
+                        useArr={useArr}
+                        reset={reset}
+                        resetS={resetS}
+                        setisFull={setisFull}
+                        mir={mir}
+                        setmir={setmir}
+                        setmirHandler={setmirHandler}
+                        mirHandler={mirHandler}></Painter>
+                </div>
+            </Draggable>
             {props.vis && <Ctrl imgsize={imgsize} setSize={setSize}></Ctrl>}
             <Utils useArr={useArr} setUseArr={setUseArr} reback={reback} redo={redo}></Utils>
         </div>

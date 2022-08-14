@@ -4,7 +4,7 @@ export default class Utils extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            utilList: ['选择', '画笔', '魔棒', '吸管', '矩形', '撤销','重做'],
+            utilList: ['选择', '画笔', '魔棒', '吸管', '矩形', '滤镜', '撤销','重做', '下载'],
             arrStyle: [],
             useArr: props.useArr
         }
@@ -27,11 +27,11 @@ export default class Utils extends Component {
             let t = new Util(require(`../pngs/${e}.png`), i)
             let tmp = []
             let res = (<div className={this.state.arrStyle[i]} key={i} onClick={() => {
-                if (i === this.state.utilList.length - 1) {
+                if (i === this.state.utilList.length - 2) {
                     this.props.redo()
                     return
                 }
-                if (i === this.state.utilList.length - 2) {
+                if (i === this.state.utilList.length - 3) {
                     this.props.reback()
                     return
                 }
