@@ -264,7 +264,8 @@ export default function Cav(props) {
     //魔棒
     const [mLimit, setmLimit] = useState(50)
     const [mColor, setmColor] = useState({r: 0, g: 0, b: 0})
-    function magic() {
+    //全部遍历一遍（弃用）
+    function magic1() {
         cav.current.onmousedown = null
         cav.current.onmousemove = null
         cav.current.onmouseup = null
@@ -283,17 +284,6 @@ export default function Cav(props) {
                 up = selectArr[1]
                 down = selectArr[3] - up
             }
-            /* for (let i = l; i < r; i++) {
-                for (let j = up; j < down; j++) {
-                    let thisData = ctx.getImageData(i, j, 1, 1).data
-                    let s2 = Math.pow((onePx[0] - thisData[0]), 2) + Math.pow((onePx[1] - thisData[1]), 2) + Math.pow((onePx[2] - thisData[2]), 2)
-                    if (s2 / 3 <= mLimit) {
-                        thisData[0] = thisData[0] + mColor.r
-                        thisData[1] = thisData[1] + mColor.g
-                        thisData[2] = thisData[2] + mColor.b
-                    }
-                }
-            } */
             for (let i = 0; i < allImageData.data.length; i += 4) {
                 let allData = allImageData.data
                 let s2 = Math.pow((onePx[0] - allData[i]), 2) + Math.pow((onePx[1] - allData[i + 1]), 2) + Math.pow((onePx[2] - allData[i + 2]), 2)
@@ -306,6 +296,80 @@ export default function Cav(props) {
             ctx.putImageData(allImageData, 0, 0)
             onreset(ctx)
         }
+    }
+
+    function magic() {
+        cav.current.onmousedown = null
+        cav.current.onmousemove = null
+        cav.current.onmouseup = null
+        let ctx = cav.current.getContext('2d')
+        let mouse
+        let onePx
+        let arr = new Array(height.slice(0, -2) * 1).fill().map(() => {
+            return new Array(width.slice(0, -2) * 1).fill(false)
+        })
+        cav.current.onmousedown = () => {
+            mouse = getMouse()
+            onePx = ctx.getImageData(mouse.x, mouse.y, 1, 1).data
+            dfs(arr, mouse.x, mouse.y, onePx, ctx)
+            onreset(ctx)
+        }
+    }
+
+    /* function bibao(fn, arr, x, y, onePx, ctx) {
+        let val = fn(arr, x, y, onePx, ctx)
+        while (typeof val === 'function') {
+            val = val()
+        }
+    } */
+
+    //深度优先遍历
+    function dfs1(arr, x, y, onePx, ctx) {
+        if (x < 0 || x >= arr.length || y < 0 || y >= arr[0].length) return null
+        if (arr[x][y]) return null
+        arr[x][y] = true
+        let allData = ctx.getImageData(x, y, 1, 1)
+        let data = allData.data
+        let s = Math.pow((onePx[0] - data[0]), 2) + Math.pow((onePx[1] - data[1]), 2) + Math.pow((onePx[2] - data[2]), 2)
+        if (s / 3 <= mLimit) {
+            data[0] = data[0] + mColor.r
+            data[1] = data[1] + mColor.g
+            data[2] = data[2] + mColor.b
+            console.log(111);
+            ctx.putImageData(allData, x, y)
+            setTimeout(() => {
+                dfs(arr, x + 1, y, onePx, ctx)
+                dfs(arr, x - 1, y, onePx, ctx)
+                dfs(arr, x, y + 1, onePx, ctx)
+                dfs(arr, x, y - 1, onePx, ctx)
+            }, 0);
+        }
+    }
+    //广度优先遍历
+    function dfs(arr, x, y, onePx, ctx) {
+        if (x < 0 || x >= arr.length || y < 0 || y >= arr[0].length) return
+        let queue = [[x, y]]
+        while (queue.length > 0) {
+            let [x, y] = queue.shift()
+            if (arr[x][y]) continue
+            arr[x][y] = true
+            let allData = ctx.getImageData(x, y, 1, 1)
+            let data = allData.data
+            let s = Math.pow((onePx[0] - data[0]), 2) + Math.pow((onePx[1] - data[1]), 2) + Math.pow((onePx[2] - data[2]), 2)
+            if (s / 3 <= mLimit) {
+                data[0] = data[0] + mColor.r
+                data[1] = data[1] + mColor.g
+                data[2] = data[2] + mColor.b
+                ctx.putImageData(allData, x, y)
+                if (y >= 1 && y <= arr.length - 2) {
+                    queue.push([x, y - 1], [x, y + 1])
+                }
+                if (x >= 1 && x <= arr[0].length - 2) {
+                    queue.push([x - 1, y], [x + 1, y])
+                }
+            }
+        }
+        console.log('down');
     }
 
     //选区
