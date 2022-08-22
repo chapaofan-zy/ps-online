@@ -8,6 +8,7 @@ import { EventEmitter } from 'events'
 import { message } from 'antd'
 import Painter from './Painter'
 import { loadConfig } from 'browserslist'
+import { splitStr, parseArr, cal } from '../parser.mjs'
 
 
 let useArr = [true, false, false, false, false, false, false, false, false]
@@ -325,8 +326,8 @@ export default function Cav(props) {
 
     //深度优先遍历
     function dfs1(arr, x, y, onePx, ctx) {
-        if (x < 0 || x >= arr.length || y < 0 || y >= arr[0].length) return null
-        if (arr[x][y]) return null
+        if (x < 0 || x >= arr.length || y < 0 || y >= arr[0].length) return
+        if (arr[x][y]) return
         arr[x][y] = true
         let allData = ctx.getImageData(x, y, 1, 1)
         let data = allData.data
@@ -436,6 +437,16 @@ export default function Cav(props) {
         let ctx = cav.current.getContext('2d')
         let allImageData = ctx.getImageData(0, 0, width.slice(0, -2) * 1, height.slice(0, -2) * 1)
         let rgb = {...mir}
+        let r1 = rgb.r.replace(/r*g*b*/g, '1')
+        let g1 = rgb.g.replace(/r*g*b*/g, '1')
+        let b1 = rgb.b.replace(/r*g*b*/g, '1')
+        let rr = parseArr(splitStr(r1))
+        let gg = parseArr(splitStr(g1))
+        let bb = parseArr(splitStr(b1))
+        if (rr.length === 0 || gg.length === 0 || bb.length === 0) {
+            message.error('输入不是数字!')
+            return
+        }
         rgb.r = rgb.r.replace(/r/g, 'allData[i]')
         rgb.r = rgb.r.replace(/g/g, 'allData[i + 1]')
         rgb.r = rgb.r.replace(/b/g, 'allData[i + 2]')
